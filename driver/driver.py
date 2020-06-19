@@ -1,7 +1,7 @@
 import serial
 import time
 import copy
-
+import os
 
 
 
@@ -19,7 +19,7 @@ def PA(args): #функция отрисовки матрицы на экран
 class MC6205:
     def __init__(self):
         self.dictionaryLetter = list(
-            "█ПЯРСТУЖВЬЫЗШЭЩЧЮАБЦДЕФГХИЙКЛМНОР" + "QRSTUVWXYZ[⌄]^-$ABCDEFGHIJKLMNO" + '0123456789:;<=>? !"#§%&' + "'()*+,_./")
+            "█ПЯРСТУЖВЬЫЗШЭЩЧЮАБЦДЕФГХИЙКЛМНО" + "PQRSTUVWXYZ[⌄]^-$ABCDEFGHIJKLMNO" + '0123456789:;<=>? !"#§%&' + "'()*+,_./")
         self.matrixScreen = [[80 for col in range(16)] for row in range(10)]
         self.matrixScreenOld1 = [[80 for col in range(16)] for row in range(10)]
         self.matrixScreenOld2 = [[80 for col in range(16)] for row in range(10)]
@@ -151,10 +151,10 @@ class MC6205:
 
     def update_monitor(self):
         try:
-            with open("filesScreen/nowscreen", "r") as file:
+            with open(os.getcwd()+"/driver/filesScreen/nowscreen", "r") as file:
                 self.nowscreen = int(file.read(1))
                 self.takeScreen(self.nowscreen)
-            with open("filesScreen/screen" + str(self.nowscreen), "r") as file:
+            with open(os.getcwd()+"/driver/filesScreen/screen" + str(self.nowscreen), "r") as file:
                 linesList = file.readlines()[:10]
                 resultList = [line[:16].replace("\n", "").ljust(16) for line in linesList]
         except:
