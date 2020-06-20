@@ -354,7 +354,20 @@
      </rect>
     </property>
     <property name="text">
-     <string>10</string>
+     <string>1</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBoxClock">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>460</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Демо часов</string>
     </property>
    </widget>
   </widget>

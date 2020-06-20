@@ -40,7 +40,6 @@ class MC6205:
                 res = self.ser.readline()
                 print(res)
                 if res.decode()[0] == "r":
-                    print("ready")
                     break
             except:
                 pass
@@ -70,6 +69,7 @@ class MC6205:
         listSetWorld = []  # word records
         cursorCount = 0  # Cursor position
         countSpace = 0  # Number of spaces
+        #TODO with space many symbols
         for row, (rowListOld, rowListNew) in enumerate(zip(oldMatrixScreen, NewMatrixScreen)):
             if rowListOld != rowListNew:
                 list_edit = []
@@ -165,6 +165,7 @@ class MC6205:
         listSetSymbol, listSetWorld, countSpace = self.comparisonMatrix(self.allScreenOld[self.nowscreen - 1], NowMatrix)
         if countSpace > 60:
             self.clearScreen()
+
         for command in listSetSymbol:
             self.setSymbol(command[0], command[1])
         for command in listSetWorld:

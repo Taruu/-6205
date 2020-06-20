@@ -1,4 +1,5 @@
-//Переключение 
+//TODO var19B
+//Переключение
 const int var8A = 13;
 
 const int var6A = 11;

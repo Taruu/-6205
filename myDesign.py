@@ -70,7 +70,7 @@ class Ui(QtWidgets.QMainWindow):
         self.NowScreen = 1
         self.AutoMode = False
         self.nowkey = None
-        self.timerSleep = 10
+        self.timerSleep = 1
         self.show()
         self.StatusLabel.setText("Подключение к serial")
         self.driver = None
@@ -101,32 +101,36 @@ class Ui(QtWidgets.QMainWindow):
             self.thread.stop()
 
     def ClearAllScreens(self):
-        self.driver.clearAllScreens()
         self.screenOne.setText("")
         self.screenTwo.setText("")
         self.screenThree.setText("")
         self.screenFour.setText("")
+        if not(self.AutoMode):
+            self.updateScreens()
 
     def clearScreen(self):
         button = self.sender()
         clearScreenNumber = int(button.objectName().split("_")[-1])
         self.StatusLabel.setText(f"Очищен экран {clearScreenNumber}")
         if clearScreenNumber == 1:
-            self.screenOne.setText("")
+            self.screenOne.clear()
         elif clearScreenNumber == 2:
-            self.screenTwo.setText("")
+            self.screenTwo.clear()
         elif clearScreenNumber == 3:
-            self.screenThree.setText("")
+            self.screenThree.clear()
         elif clearScreenNumber == 4:
-            self.screenFour.setText("")
-        self.updateScreens()
+            self.screenFour.clear()
+        if not (self.AutoMode):
+            print("not updating")
+            self.updateScreens()
 
 
     def screenTake(self):
         screenRadiobutton = self.sender()
         if screenRadiobutton.isChecked():
             self.NowScreen = screenRadiobutton.text().split()[-1]
-        self.updateScreens()
+        if not (self.AutoMode):
+            self.updateScreens()
 
     def keyReleaseEvent(self, event: QtGui.QKeyEvent):
         self.nowkey = event.key()
@@ -140,7 +144,7 @@ class Ui(QtWidgets.QMainWindow):
         if (screen.textCursor().columnNumber() >= 16) and self.nowkey!=Qt.Key_Backspace:
             screen.append("")
 
-
+    #todo cloack demo
     def updateScreens(self):
         print("Updating screens")
         self.StatusLabel.setText(f"Обновление данных на экране")
@@ -161,9 +165,7 @@ class Ui(QtWidgets.QMainWindow):
 class Worker(QThread):
     def __init__(self, MainWindow,parent = None):
         super().__init__()
-        print(MainWindow.updateScreens)
         self.mainwindow = MainWindow
-        print("worker")
         print(self.mainwindow.updateScreens)
 
     def run(self):
