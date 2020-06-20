@@ -4,10 +4,10 @@ from PyQt5 import QtGui,uic,QtCore
 from PyQt5.QtGui import QTextCursor
 from PyQt5.QtCore import QUrl
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,QThread
 import sys
 import driver.driver
-
+import time
 
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
@@ -73,9 +73,7 @@ class Ui(QtWidgets.QMainWindow):
         self.timerSleep = 10
         self.show()
         self.StatusLabel.setText("Подключение к serial")
-        self.driver = driver.driver.MC6205()
-        print(self.driver)
-        self.StatusLabel.setText("Ждем команд")
+        self.driver = None
         with open("driver/filesScreen/screen1","r") as file:
             self.screenOne.setText(file.read())
         with open("driver/filesScreen/screen2","r") as file:
@@ -86,16 +84,21 @@ class Ui(QtWidgets.QMainWindow):
             self.screenFour.setText(file.read())
         with open("driver/filesScreen/nowscreen","w") as file:
             file.write(str(self.NowScreen))
+        self.driver =driver.driver.MC6205()
+        self.thread = Worker(MainWindow=self)
+        self.StatusLabel.setText("Ждем команд")
 
     def updateDelay(self):
         if not(self.SecondsAutoUpdateLine.text().isdigit()):
             self.SecondsAutoUpdateLine.undo()
+        else:
+            self.timerSleep = int(self.SecondsAutoUpdateLine.text())
 
     def statusAutoMode(self,state):
         if state == 2:
-            self.loopTimer.start(int(self.SecondsAutoUpdateLine.text()))
+            self.thread.start()
         else:
-            self.loopTimer.stop()
+            self.thread.stop()
 
     def ClearAllScreens(self):
         self.driver.clearAllScreens()
@@ -116,17 +119,14 @@ class Ui(QtWidgets.QMainWindow):
             self.screenThree.setText("")
         elif clearScreenNumber == 4:
             self.screenFour.setText("")
-        if not(self.AutoMode):
-            self.updateScreens()
+        self.updateScreens()
+
 
     def screenTake(self):
         screenRadiobutton = self.sender()
         if screenRadiobutton.isChecked():
             self.NowScreen = screenRadiobutton.text().split()[-1]
-        if not (self.AutoMode):
-            with open("driver/filesScreen/nowscreen", "w") as file:
-                file.write(str(self.NowScreen))
-            self.updateScreens()
+        self.updateScreens()
 
     def keyReleaseEvent(self, event: QtGui.QKeyEvent):
         self.nowkey = event.key()
@@ -139,7 +139,6 @@ class Ui(QtWidgets.QMainWindow):
             return
         if (screen.textCursor().columnNumber() >= 16) and self.nowkey!=Qt.Key_Backspace:
             screen.append("")
-
 
 
     def updateScreens(self):
@@ -156,6 +155,26 @@ class Ui(QtWidgets.QMainWindow):
         with open("driver/filesScreen/screen4","w") as file:
             file.write(self.screenFour.toPlainText())
         self.driver.update_monitor()
+
+
+
+class Worker(QThread):
+    def __init__(self, MainWindow,parent = None):
+        super().__init__()
+        print(MainWindow.updateScreens)
+        self.mainwindow = MainWindow
+        print("worker")
+        print(self.mainwindow.updateScreens)
+
+    def run(self):
+        while True:
+            time.sleep(self.mainwindow.timerSleep)
+            print("loop work")
+            self.mainwindow.updateScreens()
+
+    def stop(self):
+        self.terminate()
+
 app = QtWidgets.QApplication(sys.argv)
 window = Ui()
 app.exec_()

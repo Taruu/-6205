@@ -25,15 +25,15 @@ class MC6205:
         self.matrixScreenOld2 = [[80 for col in range(16)] for row in range(10)]
         self.matrixScreenOld3 = [[80 for col in range(16)] for row in range(10)]
         self.matrixScreenOld4 = [[80 for col in range(16)] for row in range(10)]
+        self.AllMatrixArray = []
         self.allScreenOld = [self.matrixScreenOld1, self.matrixScreenOld2, self.matrixScreenOld3, self.matrixScreenOld4]
         self.ser = serial.Serial("/dev/ttyACM0")
         self.ser.baudrate = 115200
         self.ser.timeout = 40
         self.nowScreen = 1
-        if not self.ser .is_open:
+        if not self.ser.is_open:
             self.ser.open()
-
-        time.sleep(10)
+        time.sleep(1)
         res = ""
         while True:
             try:
