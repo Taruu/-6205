@@ -97,7 +97,9 @@ class Ui(QtWidgets.QMainWindow):
     def statusAutoMode(self,state):
         if state == 2:
             self.thread.start()
+            self.AutoMode = True
         else:
+            self.AutoMode = False
             self.thread.stop()
 
     def ClearAllScreens(self):
