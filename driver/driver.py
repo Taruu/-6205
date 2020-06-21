@@ -109,7 +109,35 @@ class MC6205:
                         pass
             else:
                 cursorCount += 16
+        firstListSymbol = []
+        twoListSymbol = []
+        for i,item in enumerate(listSetSymbol):
+            print(i % 2)
+            if i % 2 == 0:
+                firstListSymbol.append(item)
+            else:
+                twoListSymbol.append(item)
+        #TODO ADD Realisatioanumeric
 
+        startPos = None
+        listSetSymbolsNewWord = []
+        for first,two in zip(firstListSymbol,twoListSymbol):
+            if first[0]+2 == two[0]:
+                if len(listSetSymbolsNewWord) == 0:
+                    startPos = first[0]
+                else:
+                    listSetSymbol.remove(listSetSymbol.index(first))
+                    listSetSymbol.remove(listSetSymbol.index(two))
+                    listSetSymbolsNewWord.append(first[1])
+                    listSetSymbolsNewWord.append(two[1])
+                if len(listSetSymbolsNewWord) > 16:
+                    listSetWorld.append((startPos,listSetSymbolsNewWord))
+                    startPos = None
+                    listSetSymbolsNewWord = []
+        print(firstListSymbol)
+        print(twoListSymbol)
+        print(listSetSymbol)
+        print(listSetWorld)
         return listSetSymbol, listSetWorld, countSpace
 
     def clearScreen(self):
