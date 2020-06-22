@@ -8,6 +8,7 @@ from PyQt5.QtCore import Qt,QThread
 import sys
 import driver.driver
 import time
+from datetime import datetime
 
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
@@ -36,6 +37,7 @@ class Ui(QtWidgets.QMainWindow):
         self.ClearAll = self.findChild(QtWidgets.QPushButton,"ClearAll")
 
         self.AutoUpdate = self.findChild(QtWidgets.QCheckBox,"AutoUpdate")
+        self.ClockMode = self.findChild(QtWidgets.QCheckBox,"checkBoxClock")
 
         #Кнопки очистка
         self.ClearScreenOne = self.findChild(QtWidgets.QPushButton, "ClearScreen_1")
@@ -63,9 +65,13 @@ class Ui(QtWidgets.QMainWindow):
         self.UpdateButton.clicked.connect(self.updateScreens)
 
         self.AutoUpdate.stateChanged.connect(self.statusAutoMode)
+        self.ClockMode.stateChanged.connect(self.statusClockMode)
         self.ClearAll.clicked.connect(self.ClearAllScreens)
 
         self.SecondsAutoUpdateLine.textChanged.connect(self.updateDelay)
+
+
+        self.Clock = False
         self.NowScreen = 1
         self.AutoMode = False
         self.nowkey = None
@@ -87,6 +93,7 @@ class Ui(QtWidgets.QMainWindow):
         self.thread = Worker(MainWindow=self)
         self.StatusLabel.setText("Wait comands")
 
+
     def updateDelay(self):
         if not(self.SecondsAutoUpdateLine.text().isdigit()):
             self.SecondsAutoUpdateLine.undo()
@@ -101,8 +108,17 @@ class Ui(QtWidgets.QMainWindow):
             self.AutoMode = False
             self.thread.stop()
 
+    def statusClockMode(self,state):
+        if state == 2:
+            self.thread.stop()
+            self.thread.start()
+            self.Clock = True
+        else:
+            self.Clock = False
+            self.thread.stop()
+
     def ClearAllScreens(self):
-        self.screenOne.setText("")
+        self.screenOne.setText(1,7,8,9)
         self.screenTwo.setText("")
         self.screenThree.setText("")
         self.screenFour.setText("")
@@ -133,6 +149,7 @@ class Ui(QtWidgets.QMainWindow):
         if not (self.AutoMode):
             self.updateScreens()
 
+
     def keyReleaseEvent(self, event: QtGui.QKeyEvent):
         self.nowkey = event.key()
 
@@ -152,8 +169,9 @@ class Ui(QtWidgets.QMainWindow):
         self.StatusLabel.setText(f"Update screen {self.NowScreen}")
         with open("driver/filesScreen/nowscreen", "w") as file:
             file.write(str(self.NowScreen))
-        with open("driver/filesScreen/screen1","w") as file:
-            file.write(self.screenOne.toPlainText())
+        if not(self.Clock):
+            with open("driver/filesScreen/screen1", "w") as file:
+                file.write(self.screenOne.toPlainText())
         with open("driver/filesScreen/screen2","w") as file:
             file.write(self.screenTwo.toPlainText())
         with open("driver/filesScreen/screen3","w") as file:
@@ -169,13 +187,49 @@ class Worker(QThread):
     def __init__(self, MainWindow,parent = None):
         super().__init__()
         self.mainwindow = MainWindow
-        print(self.mainwindow.updateScreens)
+        self.ListAll = [['███', '  █', '███', '███', '█ █', '███', '███', '███', '███', '███'],
+                        ['█ █', ' ██', '  █', '  █', '█ █', '█  ', '█  ', '  █', '█ █', '█ █'],
+                        ['█ █', '  █', '███', '███', '███', '███', '███', '  █', '███', '███'],
+                        ['█ █', '  █', '█  ', '  █', '  █', '  █', '█ █', '  █', '█ █', '  █'],
+                        ['███', '  █', '███', '███', '  █', '███', '███', '  █', '███', '███']]
+
+    def numericString(self, one, two, three, four, dots):
+        resultstring = ""
+        for i in range(5):
+            if (i in [1, 3]) and dots:
+                resultstring += self.ListAll[i][one] + " " + self.ListAll[i][two] + "." + self.ListAll[i][three] + " " + self.ListAll[i][four] + "\n"
+            else:
+                resultstring +=  self.ListAll[i][one] + " " + self.ListAll[i][two] + " " + self.ListAll[i][three] + " " + self.ListAll[i][four] + "\n"
+        else:
+            resultstring +="\n"
+            resultstring += datetime.now().strftime("%T")+"\n"
+            resultstring += datetime.now().strftime("%d.%m.%Y")+ "\n"
+            resultstring += "\n"
+            resultstring += datetime.now().strftime("%A")
+            return resultstring
+
+    def clock(self):
+        one, two = datetime.now().hour // 10,datetime.now().hour % 10
+        three, four = datetime.now().minute // 10,datetime.now().minute % 10
+        if datetime.now().second % 2 == 0:
+            dots = True
+        else:
+            dots = False
+        text = self.numericString(one, two,three, four, dots)
+        print(text)
+        with open("driver/filesScreen/screen1","w") as file:
+            file.write(text)
+        self.mainwindow.updateScreens()
 
     def run(self):
         while True:
             time.sleep(self.mainwindow.timerSleep)
             print("loop work")
-            self.mainwindow.updateScreens()
+            self.clock()
+            if self.mainwindow.Clock:
+                self.clock()
+            else:
+                self.mainwindow.updateScreens()
 
     def stop(self):
         self.terminate()
