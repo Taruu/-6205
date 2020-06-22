@@ -14,7 +14,6 @@ class Ui(QtWidgets.QMainWindow):
         super(Ui, self).__init__()
         uic.loadUi('main.ui', self)
         met = QtGui.QFontMetrics(QtGui.QFont())
-        width = met.width(str("                "))
 
 
         self.loopTimer = QtCore.QTimer()
@@ -72,7 +71,7 @@ class Ui(QtWidgets.QMainWindow):
         self.nowkey = None
         self.timerSleep = 1
         self.show()
-        self.StatusLabel.setText("Подключение к serial")
+        self.StatusLabel.setText("Connected to serial")
         self.driver = None
         with open("driver/filesScreen/screen1","r") as file:
             self.screenOne.setText(file.read())
@@ -86,7 +85,7 @@ class Ui(QtWidgets.QMainWindow):
             file.write(str(self.NowScreen))
         self.driver =driver.driver.MC6205()
         self.thread = Worker(MainWindow=self)
-        self.StatusLabel.setText("Ждем команд")
+        self.StatusLabel.setText("Wait comands")
 
     def updateDelay(self):
         if not(self.SecondsAutoUpdateLine.text().isdigit()):
@@ -107,13 +106,14 @@ class Ui(QtWidgets.QMainWindow):
         self.screenTwo.setText("")
         self.screenThree.setText("")
         self.screenFour.setText("")
+        self.StatusLabel.setText("Clear All Screen")
         if not(self.AutoMode):
             self.updateScreens()
 
     def clearScreen(self):
         button = self.sender()
         clearScreenNumber = int(button.objectName().split("_")[-1])
-        self.StatusLabel.setText(f"Очищен экран {clearScreenNumber}")
+        self.StatusLabel.setText(f"Clear screen {clearScreenNumber}")
         if clearScreenNumber == 1:
             self.screenOne.clear()
         elif clearScreenNumber == 2:
@@ -123,7 +123,6 @@ class Ui(QtWidgets.QMainWindow):
         elif clearScreenNumber == 4:
             self.screenFour.clear()
         if not (self.AutoMode):
-            print("not updating")
             self.updateScreens()
 
 
@@ -145,11 +144,12 @@ class Ui(QtWidgets.QMainWindow):
             return
         if (screen.textCursor().columnNumber() >= 16) and self.nowkey!=Qt.Key_Backspace:
             screen.append("")
+        self.StatusLabel.setText(f"Edit screen {screen.objectName().split('_')[1]}")
 
     #todo cloack demo
     def updateScreens(self):
         print("Updating screens")
-        self.StatusLabel.setText(f"Обновление данных на экране")
+        self.StatusLabel.setText(f"Update screen {self.NowScreen}")
         with open("driver/filesScreen/nowscreen", "w") as file:
             file.write(str(self.NowScreen))
         with open("driver/filesScreen/screen1","w") as file:
@@ -161,6 +161,7 @@ class Ui(QtWidgets.QMainWindow):
         with open("driver/filesScreen/screen4","w") as file:
             file.write(self.screenFour.toPlainText())
         self.driver.update_monitor()
+        self.StatusLabel.setText(f"Wait comands")
 
 
 

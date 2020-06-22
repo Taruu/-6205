@@ -125,11 +125,8 @@ void commandHandler(int serialCountByte){
       case 6: //Устоновка множества слов по адрессу
       GoToPos(int(listCommandBytes[1]));
       for (int letter=2;letter<serialCountByte;letter++){
-        delay(4);
         numSymbol(listCommandBytes[letter]);
-        delay(4);
         setSymbol();
-        delay(4);
         nextRow();
         nowPosCursor++;
       }

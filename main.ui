@@ -177,7 +177,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Экран 1</string>
+     <string>Screen 1</string>
     </property>
     <property name="checked">
      <bool>true</bool>
@@ -193,7 +193,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Экран 2</string>
+     <string>Screen 2</string>
     </property>
     <property name="checked">
      <bool>false</bool>
@@ -209,7 +209,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Экран 3</string>
+     <string>Screen 3</string>
     </property>
     <property name="checked">
      <bool>false</bool>
@@ -225,7 +225,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Экран 4</string>
+     <string>Screen 4</string>
     </property>
     <property name="checked">
      <bool>false</bool>
@@ -241,7 +241,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Обновить</string>
+     <string>Send data</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ClearScreen_1">
@@ -254,7 +254,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Очистить</string>
+     <string>Сlear</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ClearScreen_2">
@@ -267,7 +267,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Очистить</string>
+     <string>Сlear</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ClearScreen_3">
@@ -280,7 +280,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Очистить</string>
+     <string>Сlear</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ClearScreen_4">
@@ -293,7 +293,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Очистить</string>
+     <string>Сlear</string>
     </property>
    </widget>
    <widget class="QLabel" name="StatusLabel">
@@ -319,7 +319,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Статус:</string>
+     <string>Status:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ClearAll">
@@ -332,29 +332,29 @@
      </rect>
     </property>
     <property name="text">
-     <string>Очистить все экраны</string>
+     <string>Clear all screens</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="AutoUpdate">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>460</y>
-      <width>161</width>
-      <height>21</height>
+      <x>200</x>
+      <y>380</y>
+      <width>171</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Авто Обновление</string>
+     <string>Auto update</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="SecondsAutoUpdate">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>490</y>
-      <width>113</width>
-      <height>23</height>
+      <x>330</x>
+      <y>380</y>
+      <width>51</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -365,13 +365,13 @@
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>460</y>
-      <width>131</width>
-      <height>21</height>
+      <y>420</y>
+      <width>141</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Демо часов</string>
+     <string>Clock mode</string>
     </property>
    </widget>
   </widget>
