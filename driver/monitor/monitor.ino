@@ -1,3 +1,4 @@
+#define SERIAL_BUFFER_SIZE 1024
 //TODO var19B
 //Переключение
 const int var8A = 13;
@@ -10,7 +11,7 @@ const int var12A = 9;
 const int var15B = 8;
 const int var16A = 7;
 
-//Знак буквы
+//take symbol
 const int var22A = A0;
 const int var22B = A1;
 const int var20B = A6;
@@ -20,10 +21,10 @@ const int var18B = A5;
 const int var24B = A3;
 const int var16B = A4;
 
-//выбор экрана 
+//take screen
 const int var2A = 5;
 const int var2B = 6;
-//очистка экрана
+//clear screen
 const int var18A = 4;
 
 byte clearCount = 0;
@@ -124,8 +125,11 @@ void commandHandler(int serialCountByte){
       case 6: //Устоновка множества слов по адрессу
       GoToPos(int(listCommandBytes[1]));
       for (int letter=2;letter<serialCountByte;letter++){
+        delay(4);
         numSymbol(listCommandBytes[letter]);
+        delay(4);
         setSymbol();
+        delay(4);
         nextRow();
         nowPosCursor++;
       }

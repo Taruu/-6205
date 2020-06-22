@@ -112,32 +112,51 @@ class MC6205:
         firstListSymbol = []
         twoListSymbol = []
         for i,item in enumerate(listSetSymbol):
-            print(i % 2)
             if i % 2 == 0:
                 firstListSymbol.append(item)
             else:
                 twoListSymbol.append(item)
-        #TODO ADD Realisatioanumeric
-
-        startPos = None
-        listSetSymbolsNewWord = []
-        for first,two in zip(firstListSymbol,twoListSymbol):
-            if first[0]+2 == two[0]:
-                if len(listSetSymbolsNewWord) == 0:
-                    startPos = first[0]
-                else:
-                    listSetSymbol.remove(listSetSymbol.index(first))
-                    listSetSymbol.remove(listSetSymbol.index(two))
-                    listSetSymbolsNewWord.append(first[1])
-                    listSetSymbolsNewWord.append(two[1])
-                if len(listSetSymbolsNewWord) > 16:
-                    listSetWorld.append((startPos,listSetSymbolsNewWord))
-                    startPos = None
-                    listSetSymbolsNewWord = []
         print(firstListSymbol)
         print(twoListSymbol)
-        print(listSetSymbol)
-        print(listSetWorld)
+        #TODO ADD Realisatioanumeric
+        #Todo fix stemp
+        print("set",listSetSymbol)
+        startPos = None
+        listSetSymbolsNewWord = []
+        # for positionInList,(first,two) in enumerate(zip(firstListSymbol,twoListSymbol)):
+        #
+        #     if len(listSetSymbolsNewWord) > 16:
+        #         print("add")
+        #         if startPos != None:
+        #             listSetWorld.append((startPos,listSetSymbolsNewWord))
+        #         startPos = None
+        #         listSetSymbolsNewWord = []
+        #     if first[0]+2 == two[0] and len(listSetSymbolsNewWord)+4 < 16:
+        #         print(first, two,startPos,len(listSetSymbolsNewWord),listSetSymbolsNewWord)
+        #         if startPos == None:
+        #             startPos = first[0]
+        #         if len(listSetSymbolsNewWord) > 0:
+        #             listSetSymbolsNewWord.append(80)
+        #             listSetSymbolsNewWord.append(listSetSymbol.pop(listSetSymbol.index(first))[1])
+        #             listSetSymbolsNewWord.append(80)
+        #             listSetSymbolsNewWord.append(listSetSymbol.pop(listSetSymbol.index(two))[1])
+        #         else:
+        #             listSetSymbolsNewWord.append(listSetSymbol.pop(listSetSymbol.index(first))[1])
+        #             listSetSymbolsNewWord.append(80)
+        #             listSetSymbolsNewWord.append(listSetSymbol.pop(listSetSymbol.index(two))[1])
+        #
+        #     else:
+        #         if startPos != None:
+        #             listSetWorld.append((startPos,listSetSymbolsNewWord))
+        #         startPos = None
+        #         listSetSymbolsNewWord = []
+
+
+
+
+
+        print("listSetSymbol",listSetSymbol)
+        print("listSetWorld",listSetWorld)
         return listSetSymbol, listSetWorld, countSpace
 
     def clearScreen(self):
@@ -197,6 +216,7 @@ class MC6205:
         for command in listSetSymbol:
             self.setSymbol(command[0], command[1])
         for command in listSetWorld:
+            #time.sleep(0.1)
             self.setWord(command[0], command[1])
         self.allScreenOld[self.nowscreen - 1] = copy.deepcopy(NowMatrix)
 

@@ -18,6 +18,10 @@
   <property name="windowTitle">
    <string>МС6205 - control</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextEdit" name="TextEditScreen_1">
     <property name="geometry">
@@ -362,7 +366,7 @@
      <rect>
       <x>200</x>
       <y>460</y>
-      <width>211</width>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
