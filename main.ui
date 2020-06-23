@@ -20,7 +20,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icon.png</normaloff>icon.png</iconset>
+    <normaloff>MC6205Icon.png</normaloff>MC6205Icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextEdit" name="TextEditScreen_1">
