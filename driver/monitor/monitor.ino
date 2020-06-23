@@ -1,4 +1,4 @@
-#define SERIAL_BUFFER_SIZE 1024
+#define SERIAL_BUFFER_SIZE 2024
 //TODO var19B
 //Переключение
 const int var8A = 13;
@@ -181,23 +181,23 @@ while(positionNeed>nowPosCursor){
 
 void nextRow(){
   digitalWrite(var6B,LOW);
-  delay(1);
+  delayMicroseconds(1);
   digitalWrite(var6B,HIGH);
-  delay(2);
+  delayMicroseconds(2);
   }
 
 void forwardRow(){
   digitalWrite(var6A,LOW);
-  delay(1);
+  delayMicroseconds(1);
   digitalWrite(var6A,HIGH);
-  delay(2);
+  delayMicroseconds(2);
 }
 
 void RowAddTen(){
   digitalWrite(var15B,LOW);
-  delay(1);
+  delayMicroseconds(1);
   digitalWrite(var15B,HIGH);
-  delay(2);
+  delayMicroseconds(2);
 
 }
 
@@ -267,14 +267,15 @@ void takeSymbol(bool i0, bool i1, bool i2, bool i3, bool i4, bool i5, bool i6) {
   digitalWrite(var23B, i2);
   digitalWrite(var18B, i1);
   digitalWrite(var24B, i0);
+  delayMicroseconds(5); 
 }
 void setSymbol(){
   digitalWrite(var16B, HIGH);
-  delayMicroseconds(10); 
+  delayMicroseconds(1); 
   digitalWrite(var16B, LOW);
-  delayMicroseconds(10);
+  delayMicroseconds(1);
   digitalWrite(var16B, HIGH);
-  delayMicroseconds(500);
+  delayMicroseconds(5);
   
 }
 

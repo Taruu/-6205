@@ -114,7 +114,6 @@ class MC6205:
     def clearScreen(self):
         self.ser.write(bytearray([1, 0]))
         self.ser.readline()
-        time.sleep(1)
 
     def setSymbol(self,pos: int, sym):
         if issubclass(type(sym), str):
@@ -133,12 +132,10 @@ class MC6205:
         tosend += intdata
         self.ser.write(bytearray(tosend))
         self.ser.readline()
-        time.sleep(0.5)
 
     def startPos(self):
         self.ser.write(bytearray([1, 7]))
         self.ser.readline()
-        time.sleep(1)
 
     def clearAllScreens(self):
         for i in range(4):
@@ -162,13 +159,14 @@ class MC6205:
             resultList.append("".ljust(16))
         NowMatrix = [self.strToCodeList(line) for line in resultList]
         listSetSymbol, listSetWorld, countSpace = self.comparisonMatrix(self.allScreenOld[self.nowscreen - 1], NowMatrix)
-        if countSpace > 60:
+        if countSpace > 50:
             self.clearScreen()
-
-        for command in listSetSymbol:
-            self.setSymbol(command[0], command[1])
         for command in listSetWorld:
             self.setWord(command[0], command[1])
+            time.sleep(0.02)
+        for command in listSetSymbol:
+            self.setSymbol(command[0], command[1])
+            time.sleep(0.02)
         self.allScreenOld[self.nowscreen - 1] = copy.deepcopy(NowMatrix)
 
 

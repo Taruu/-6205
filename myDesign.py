@@ -101,12 +101,16 @@ class Ui(QtWidgets.QMainWindow):
         self.StatusLabel.setText("Wait comands")
 
     def takeMode(self):
+        if self.thread.isRunning():
+            self.thread.stop()
+        self.thread = Worker(MainWindow=self)
         radioMode = self.sender()
         if not(radioMode.isChecked()):
             return
         mode = radioMode.text().split()[0]
         if mode == "Manual":
             self.thread.stop()
+            time.sleep(1)
             if self.Clock:
                 with open("driver/filesScreen/screen1", "w") as file:
                     file.write(self.screenOne.toPlainText())
@@ -114,6 +118,7 @@ class Ui(QtWidgets.QMainWindow):
             self.AutoMode = False
         elif mode == "Loop":
             self.thread.stop()
+            time.sleep(1)
             if self.Clock:
                 with open("driver/filesScreen/screen1", "w") as file:
                     file.write(self.screenOne.toPlainText())
@@ -122,10 +127,10 @@ class Ui(QtWidgets.QMainWindow):
             self.thread.start()
             pass
         elif mode == "Clock":
-            self.radioButtonOne.setChecked(True)
+            if not(self.radioButtonOne.isChecked()):
+                self.radioButtonOne.setChecked(True)
             self.AutoMode = False
             self.Clock = True
-            self.thread.stop()
             self.thread.start()
 
 
@@ -237,11 +242,12 @@ class Worker(QThread):
 
     def run(self):
         while True:
-            time.sleep(self.mainwindow.timerSleep)
             if self.mainwindow.Clock:
+                print("clock")
                 self.clock()
             else:
                 self.mainwindow.updateScreens()
+            time.sleep(self.mainwindow.timerSleep)
 
     def stop(self):
         self.terminate()
