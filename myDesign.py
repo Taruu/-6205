@@ -36,14 +36,17 @@ class Ui(QtWidgets.QMainWindow):
         self.UpdateButton = self.findChild(QtWidgets.QPushButton,"updateButton")
         self.ClearAll = self.findChild(QtWidgets.QPushButton,"ClearAll")
 
-        self.AutoUpdate = self.findChild(QtWidgets.QCheckBox,"AutoUpdate")
-        self.ClockMode = self.findChild(QtWidgets.QCheckBox,"checkBoxClock")
-
         #Кнопки очистка
         self.ClearScreenOne = self.findChild(QtWidgets.QPushButton, "ClearScreen_1")
         self.ClearScreenTwo = self.findChild(QtWidgets.QPushButton, "ClearScreen_2")
         self.ClearScreenThree = self.findChild(QtWidgets.QPushButton, "ClearScreen_3")
         self.ClearScreenFour = self.findChild(QtWidgets.QPushButton, "ClearScreen_4")
+
+        #button model
+        self.radioButtonManual = self.findChild(QtWidgets.QRadioButton,"radioButtonManual")
+        self.radioButtonLoop = self.findChild(QtWidgets.QRadioButton, "radioButtonLoop")
+        self.radioButtonClock = self.findChild(QtWidgets.QRadioButton, "radioButtonClock")
+
 
         self.StatusLabel = self.findChild(QtWidgets.QLabel,"StatusLabel")
         #textedit
@@ -56,6 +59,10 @@ class Ui(QtWidgets.QMainWindow):
         self.radioButtonTwo.toggled.connect(self.screenTake)
         self.radioButtonThree.toggled.connect(self.screenTake)
         self.radioButtonFour.toggled.connect(self.screenTake)
+
+        self.radioButtonManual.toggled.connect(self.takeMode)
+        self.radioButtonLoop.toggled.connect(self.takeMode)
+        self.radioButtonClock.toggled.connect(self.takeMode)
         #Кнопки очистки
         self.ClearScreenOne.clicked.connect(self.clearScreen)
         self.ClearScreenTwo.clicked.connect(self.clearScreen)
@@ -64,16 +71,16 @@ class Ui(QtWidgets.QMainWindow):
 
         self.UpdateButton.clicked.connect(self.updateScreens)
 
-        self.AutoUpdate.stateChanged.connect(self.statusAutoMode)
-        self.ClockMode.stateChanged.connect(self.statusClockMode)
+        # self.AutoUpdate.stateChanged.connect(self.statusAutoMode)
+        # self.ClockMode.stateChanged.connect(self.statusClockMode)
         self.ClearAll.clicked.connect(self.ClearAllScreens)
 
         self.SecondsAutoUpdateLine.textChanged.connect(self.updateDelay)
 
 
         self.Clock = False
-        self.NowScreen = 1
         self.AutoMode = False
+        self.NowScreen = 1
         self.nowkey = None
         self.timerSleep = 1
         self.show()
@@ -93,6 +100,34 @@ class Ui(QtWidgets.QMainWindow):
         self.thread = Worker(MainWindow=self)
         self.StatusLabel.setText("Wait comands")
 
+    def takeMode(self):
+        radioMode = self.sender()
+        if not(radioMode.isChecked()):
+            return
+        mode = radioMode.text().split()[0]
+        if mode == "Manual":
+            self.thread.stop()
+            if self.Clock:
+                with open("driver/filesScreen/screen1", "w") as file:
+                    file.write(self.screenOne.toPlainText())
+            self.Clock = False
+            self.AutoMode = False
+        elif mode == "Loop":
+            self.thread.stop()
+            if self.Clock:
+                with open("driver/filesScreen/screen1", "w") as file:
+                    file.write(self.screenOne.toPlainText())
+            self.Clock = False
+            self.AutoMode = True
+            self.thread.start()
+            pass
+        elif mode == "Clock":
+            self.radioButtonOne.setChecked(True)
+            self.AutoMode = False
+            self.Clock = True
+            self.thread.stop()
+            self.thread.start()
+
 
     def updateDelay(self):
         if not(self.SecondsAutoUpdateLine.text().isdigit()):
@@ -100,31 +135,13 @@ class Ui(QtWidgets.QMainWindow):
         else:
             self.timerSleep = int(self.SecondsAutoUpdateLine.text())
 
-    def statusAutoMode(self,state):
-        if state == 2:
-            self.thread.start()
-            self.AutoMode = True
-        else:
-            self.AutoMode = False
-            self.thread.stop()
-
-    def statusClockMode(self,state):
-        if state == 2:
-            self.thread.stop()
-            self.thread.start()
-            self.Clock = True
-        else:
-            self.Clock = False
-            self.thread.stop()
 
     def ClearAllScreens(self):
-        self.screenOne.setText(1,7,8,9)
-        self.screenTwo.setText("")
-        self.screenThree.setText("")
-        self.screenFour.setText("")
+        self.screenOne.clear()
+        self.screenTwo.clear()
+        self.screenThree.clear()
+        self.screenFour.clear()
         self.StatusLabel.setText("Clear All Screen")
-        if not(self.AutoMode):
-            self.updateScreens()
 
     def clearScreen(self):
         button = self.sender()
@@ -146,8 +163,6 @@ class Ui(QtWidgets.QMainWindow):
         screenRadiobutton = self.sender()
         if screenRadiobutton.isChecked():
             self.NowScreen = screenRadiobutton.text().split()[-1]
-        if not (self.AutoMode):
-            self.updateScreens()
 
 
     def keyReleaseEvent(self, event: QtGui.QKeyEvent):
@@ -216,7 +231,6 @@ class Worker(QThread):
         else:
             dots = False
         text = self.numericString(one, two,three, four, dots)
-        print(text)
         with open("driver/filesScreen/screen1","w") as file:
             file.write(text)
         self.mainwindow.updateScreens()
@@ -224,8 +238,6 @@ class Worker(QThread):
     def run(self):
         while True:
             time.sleep(self.mainwindow.timerSleep)
-            print("loop work")
-            self.clock()
             if self.mainwindow.Clock:
                 self.clock()
             else:

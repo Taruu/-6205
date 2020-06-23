@@ -341,38 +341,12 @@
       <x>200</x>
       <y>380</y>
       <width>161</width>
-      <height>91</height>
+      <height>131</height>
      </rect>
     </property>
     <property name="title">
      <string>Mode loop</string>
     </property>
-    <widget class="QCheckBox" name="AutoUpdate">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>171</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Auto update</string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="checkBoxClock">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>50</y>
-       <width>141</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Clock mode</string>
-     </property>
-    </widget>
     <widget class="QLineEdit" name="SecondsAutoUpdate">
      <property name="geometry">
       <rect>
@@ -384,6 +358,48 @@
      </property>
      <property name="text">
       <string>1</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButtonManual">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Manual Mode</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButtonLoop">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>60</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Loop Mode</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioButtonClock">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>90</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Clock Mode</string>
      </property>
     </widget>
    </widget>
