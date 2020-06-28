@@ -17,7 +17,7 @@ def PA(args): #функция отрисовки матрицы на экран
     return result
 
 class MC6205:
-    def __init__(self):
+    def __init__(self,port_address:str):
         self.dictionaryLetter = list(
             "█ПЯРСТУЖВЬЫЗШЭЩЧЮАБЦДЕФГХИЙКЛМНО" + "PQRSTUVWXYZ[⌄]^-$ABCDEFGHIJKLMNO" + '0123456789:;<=>? !"#§%&' + "'()*+,_./")
         self.matrixScreen = [[80 for col in range(16)] for row in range(10)]
@@ -27,7 +27,7 @@ class MC6205:
         self.matrixScreenOld4 = [[80 for col in range(16)] for row in range(10)]
         self.AllMatrixArray = []
         self.allScreenOld = [self.matrixScreenOld1, self.matrixScreenOld2, self.matrixScreenOld3, self.matrixScreenOld4]
-        self.ser = serial.Serial("/dev/ttyACM0")
+        self.ser = serial.Serial(port_address)
         self.ser.baudrate = 115200
         self.ser.timeout = 40
         self.nowScreen = 1
@@ -163,20 +163,21 @@ class MC6205:
             self.clearScreen()
         for command in listSetWorld:
             self.setWord(command[0], command[1])
-            time.sleep(0.02)
+            time.sleep(0.08)
         for command in listSetSymbol:
             self.setSymbol(command[0], command[1])
-            time.sleep(0.02)
+            time.sleep(0.08)
         self.allScreenOld[self.nowscreen - 1] = copy.deepcopy(NowMatrix)
 
 
 
 
 if __name__ == "__main__":
-    driver = MC6205()
+    driver = MC6205("/dev/ttyACM0")
     while True:
         time.sleep(1)
         driver.update_monitor()
+        print("UP")
 
     # print(PA(matrixScreenOld))
     # print(PA(NowMatrix))

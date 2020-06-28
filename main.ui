@@ -341,7 +341,7 @@
       <x>200</x>
       <y>380</y>
       <width>161</width>
-      <height>131</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -402,6 +402,16 @@
       <string>Clock Mode</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QComboBox" name="comboBoxPort">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>500</y>
+      <width>161</width>
+      <height>23</height>
+     </rect>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

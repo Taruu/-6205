@@ -8,6 +8,7 @@ from PyQt5.QtCore import Qt,QThread
 import sys
 import driver.driver
 import time
+from serial.tools import list_ports
 from datetime import datetime
 
 class Ui(QtWidgets.QMainWindow):
@@ -47,6 +48,8 @@ class Ui(QtWidgets.QMainWindow):
         self.radioButtonLoop = self.findChild(QtWidgets.QRadioButton, "radioButtonLoop")
         self.radioButtonClock = self.findChild(QtWidgets.QRadioButton, "radioButtonClock")
 
+        #QComboBox
+        self.comboBox = self.findChild(QtWidgets.QComboBox, "comboBoxPort")
 
         self.StatusLabel = self.findChild(QtWidgets.QLabel,"StatusLabel")
         #textedit
@@ -78,6 +81,10 @@ class Ui(QtWidgets.QMainWindow):
         self.SecondsAutoUpdateLine.textChanged.connect(self.updateDelay)
 
 
+        #Qcombobox in
+        for port in [(port.device,port.manufacturer) for port in list_ports.comports(include_links=False)]:
+            if port[1]:
+                self.comboBox.addItem(f"{port[1]} {port[0]}",userData=port)
         self.Clock = False
         self.AutoMode = False
         self.NowScreen = 1
@@ -96,9 +103,12 @@ class Ui(QtWidgets.QMainWindow):
             self.screenFour.setText(file.read())
         with open("driver/filesScreen/nowscreen","w") as file:
             file.write(str(self.NowScreen))
-        self.driver =driver.driver.MC6205()
+
+        self.driver =driver.driver.MC6205(self.comboBox.currentData()[0])
         self.thread = Worker(MainWindow=self)
         self.StatusLabel.setText("Wait comands")
+
+        self.comboBox.currentIndexChanged.connect(self.updateSerial)
 
     def takeMode(self):
         if self.thread.isRunning():
@@ -109,7 +119,8 @@ class Ui(QtWidgets.QMainWindow):
             return
         mode = radioMode.text().split()[0]
         if mode == "Manual":
-            self.thread.stop()
+            if self.thread.isRunning():
+                self.thread.stop()
             time.sleep(1)
             if self.Clock:
                 with open("driver/filesScreen/screen1", "w") as file:
@@ -117,7 +128,8 @@ class Ui(QtWidgets.QMainWindow):
             self.Clock = False
             self.AutoMode = False
         elif mode == "Loop":
-            self.thread.stop()
+            if self.thread.isRunning():
+                self.thread.stop()
             time.sleep(1)
             if self.Clock:
                 with open("driver/filesScreen/screen1", "w") as file:
@@ -133,7 +145,15 @@ class Ui(QtWidgets.QMainWindow):
             self.Clock = True
             self.thread.start()
 
-
+    def updateSerial(self):
+        print("serial update")
+        if self.thread:
+            if self.thread.isRunning():
+                self.thread.stop()
+            if self.comboBox.currentData()[1]:
+                self.driver = driver.driver.MC6205(self.comboBox.currentData()[0])
+            else:
+                pass
     def updateDelay(self):
         if not(self.SecondsAutoUpdateLine.text().isdigit()):
             self.SecondsAutoUpdateLine.undo()
